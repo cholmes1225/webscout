@@ -75,19 +75,25 @@ sub getpos {
 }
 
 if ("$event" eq "") {
+    print "<table cellspacing=5 cellpadding=5 border=0>\n";
 	foreach my $f (@files) {
-		my @fname = split /\//, $f;
-		my @name = split /\./, $fname[-1];
-		print "<h2><a href=\"${me}?event=$name[0]\">$name[0]</a>";
-		my $csvfile = "/csv/" . $name[0] . ".txt";
-		if ( -f "/var/www/html/$csvfile" ) {
-			print "&nbsp;&nbsp;&nbsp;&nbsp;";
-			print "<a href=\"opr.cgi?event=$name[0]\">OPR</a>\n";
-			print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(";
-			print "<a href=\"$csvfile\">CSV file</a>)";
-		}
-		print "</h2>\n";
+	    my @fname = split /\//, $f;
+	    my @name = split /\./, $fname[-1];
+	    print "<tr><td><h2><a href=\"${me}?event=$name[0]\">$name[0]</a></h2></td>";
+	    print "<td>&nbsp;&nbsp;</td>";
+	    my $csvfile = "/csv/" . $name[0] . ".txt";
+	    if ( -f "/var/www/html/$csvfile" ) {
+		print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Match Predictor</a></h2>\n";
+		print "</td><td>&nbsp;&nbsp;</td>";
+		print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Match Data</a></h2>\n";
+		print "</td><td>&nbsp;&nbsp;</td><td><h2>(";
+		print "<a href=\"$csvfile\">CSV file</a>)</h2></td>";
+	    } else {
+		print "<td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td><td>&nbsp;&nbsp;</td><td>&nbsp;</td>";
+	    }
+	    print "</tr>\n";
 	}
+    print "</table>\n";
 } else {
 	if ("$pos" eq "") {
 		print "<table cellpadding=20 cellspacing=10><tr>\n";

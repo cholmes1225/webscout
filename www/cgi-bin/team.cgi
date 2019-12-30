@@ -141,17 +141,30 @@ while (my $line = <$fh>) {
     # tech fouls
     $defoul{$m} .= "<td align=center><h2>$items[26]</h2></td>";
     
-	# SCOUT INPUT
-	# rank
+    # SCOUT INPUT
+    # rank
     $scout{$m} .= "<td align=center><h2>$items[27]</h2></td>";
-	# name
-	if (@items > 27) {
-	    $scout{$m} .= "<td align=center><h2>$items[28]</h2></td>";
-		# comments
-    	$scout{$m} .= "<td align=center><h2>$items[29]</h2></td>";
-	} else {
-		$scout{$m} .= "<td>&nbsp;</td><td>&nbsp;</td>";
-	}
+    # name
+    if (@items > 27) {
+        my $str = $items[28];
+	$str =~ tr/+/ /;
+        $scout{$m} .= "<td align=center><h2>$str</h2></td>";
+    } else {
+        $scout{$m} .= "<td>&nbsp;</td>";
+    }
+    # comments
+    if (@items > 28) {
+        my $str = $items[29];
+	$str =~ tr/+/ /;
+	$str =~ s/%2C/,/g;
+	$str =~ s/%27/'/g;
+	$str =~ s/%3A/:/g;
+	$str =~ s/%0A/<BR>/g;
+	$str =~ s/%0D//g;
+        $scout{$m} .= "<td align=center><h2>$str</h2></td>";
+    } else {
+        $scout{$m} .= "<td>&nbsp;</td>";
+    }
 }
 
 
