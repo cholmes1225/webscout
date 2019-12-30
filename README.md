@@ -16,9 +16,9 @@ The scouting hardware layout consists of:
 
 The scouting tablets are connected to the ethernet adapters, which allows them to be connected to the 8-port switch. The Raspberry Pi is also connected to the switch. The Raspberry Pi is powered on, and then the tablets are powered up.
 
-This software is installed on the Raspberry Pi running Ubuntu 18.04 with apache2. The Raspberry Pi is configured with a static IP address ( in our case, 10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
+This software is installed on the Raspberry Pi running Ubuntu 18.04 with apache2. A DHCP server is also configured on the Raspberry Pi to serve IP addresses to the tablets on the private LAN. The Raspberry Pi is configured with its own static IP address (in our case, 10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
 
-This software provides the ability to scout individual robots in an FRC match, gather the data into CSV files which can be imported into Excel or Tableau, and calculate an Offensive Performance Rating (OPR) for each robot and sort the teams into a very simple "pick list".
+This software provides the ability to scout individual robots in an FRC match and gather the data into CSV files, which can be imported into Excel or Tableau for post-analysis. The software also calculates an Offensive Performance Rating (OPR) for each robot and sorts the teams into a very simple "pick list".
 
 This software currently scouts the 2019 Destination Deep Space FRC challenge.
 
