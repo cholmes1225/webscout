@@ -83,9 +83,9 @@ if ("$event" eq "") {
 	    print "<td>&nbsp;&nbsp;</td>";
 	    my $csvfile = "/csv/" . $name[0] . ".txt";
 	    if ( -f "/var/www/html/$csvfile" ) {
-		print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Match Predictor</a></h2>\n";
-		print "</td><td>&nbsp;&nbsp;</td>";
 		print "<td><h2><a href=\"opr.cgi?event=$name[0]\">Match Data</a></h2>\n";
+		print "</td><td>&nbsp;&nbsp;</td>";
+		print "<td><h2><a href=\"matchup.cgi?event=$name[0]\">Match Predictor</a></h2>\n";
 		print "</td><td>&nbsp;&nbsp;</td><td><h2>(";
 		print "<a href=\"$csvfile\">CSV file</a>)</h2></td>";
 	    } else {
