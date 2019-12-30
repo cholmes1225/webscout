@@ -16,15 +16,15 @@ The scouting hardware layout consists of:
 
 The scouting tablets are connected to the ethernet adapters, which allows them to be connected to the 8-port switch. The Raspberry Pi is also connected to the switch. The Raspberry Pi is powered on, and then the tablets are powered up.
 
-This software is installed on the Raspberry Pi running Ubuntu 18.04 with apache2. The Raspberry Pi is configured with a static IP address (10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
+This software is installed on the Raspberry Pi running Ubuntu 18.04 with apache2. The Raspberry Pi is configured with a static IP address ( in our case, 10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
 
-This software provides the ability to scout individual robots in an FRC match, gather the data into CSV files which can be imported into Excel or Tableau, and calculate an Offensive Performance Rating (OPR) for each robot and sort them into a simple "pick list".
+This software provides the ability to scout individual robots in an FRC match, gather the data into CSV files which can be imported into Excel or Tableau, and calculate an Offensive Performance Rating (OPR) for each robot and sort the teams into a very simple "pick list".
 
 This software currently scouts the 2019 Destination Deep Space FRC challenge.
 
 
 # Software Design
 
-This software design is based on Perl CGI scripts that can parse URL input and produce or "print" simple HTML output. The initial layout of the HTML pages was written up and evaluated with a browser, and then Perl scripts were written to "print" that HTML output. Then the URL links and argument parsing code was added to make the pages interactive.
+This software design is based on executable "CGI" scripts that can parse URL input and produce or "print" simple HTML output. The initial design of the HTML scouting pages were created and evaluated with a browser, and then Perl scripts were written to "print" the same HTML output. Then the URL links and argument parsing code was added to make the pages interactive.
 
-The images are screenshots taken from the FRC 2019 Game Manual. This infrastructure could also support javascript or python scripts, if someone wanted to explore/contribute that approach.
+The images used in the scouting web pages are screenshots taken from the FRC 2019 Game Manual. This design can support any type of scripting language, such as javascript or python scripts, so anyone can contribute new webpages using whatever programming language that they are comfortable using.
