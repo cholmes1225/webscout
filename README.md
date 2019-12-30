@@ -27,4 +27,4 @@ This software currently scouts the 2019 Destination Deep Space FRC challenge.
 
 This software design is based on Perl CGI scripts that can parse URL input and produce or "print" simple HTML output. The initial layout of the HTML pages was written up and evaluated with a browser, and then Perl scripts were written to "print" that HTML output. Then the URL links and argument parsing code was added to make the pages interactive.
 
-The images are screenshots taken from the FRC 2019 Game Manual. This infrastructure could also support javascript, if someone wanted to explore that approach.
+The images are screenshots taken from the FRC 2019 Game Manual. This infrastructure could also support javascript or python scripts, if someone wanted to explore/contribute that approach.
