@@ -7,7 +7,7 @@ my $game = '2019UNH_qm1_1';
 my $team = "1234";
 my $auto = "0-0-0";
 my $teleop = "0-0-0";
-my $missed = "0";
+my $missed = "0-0";
 my $shotloc = "000000000000000000000000000000000000";
 my $ctrl = "00";
 

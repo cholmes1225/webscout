@@ -25,24 +25,24 @@ my $order = "opr";
 # read in given game data
 #
 if ($ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
+    my @args = split /\&/, $ENV{QUERY_STRING};
+    my %params;
+    foreach my $arg (@args) {
+	my @bits = split /=/, $arg;
+	next unless (@bits == 2);
+	$params{$bits[0]} = $bits[1];
+    }
+    $event = $params{'event'}  if (defined $params{'event'});
+    $clear = $params{'clear'}  if (defined $params{'clear'});
+    $order = $params{'order'}  if (defined $params{'order'});
+    if (defined $params{'picked'}) {
+	my @plist = split /,/, $params{'picked'};
+	foreach my $p (@plist) {
+	    next if ($clear eq $p);
+	    push @picked, $p;
+	    $pickhash{$p} = 1;
 	}
-	$event = $params{'event'}  if (defined $params{'event'});
-	$clear = $params{'clear'}  if (defined $params{'clear'});
-	$order = $params{'order'}  if (defined $params{'order'});
-	if (defined $params{'picked'}) {
-		my @plist = split /,/, $params{'picked'};
-		foreach my $p (@plist) {
-			next if ($clear eq $p);
-			push @picked, $p;
-			$pickhash{$p} = 1;
-		}
-	}
+    }
 }
 
 # print web page beginning
@@ -79,7 +79,8 @@ my %teamAIPort;
 my %teamTBPort;
 my %teamTOPort;
 my %teamTIPort;
-my %teamMissed;
+my %teamAMissd;
+my %teamTMissd;
 my %teamRotate;
 my %teamPosition;
 my %teamPark;
@@ -98,12 +99,13 @@ if ( open(my $fh, "<", $file) ) {
 	my $TBot  = $items[7];
 	my $TOut  = $items[8];
 	my $TInn  = $items[9];
-	my $miss  = $items[10];
-	my $rotate = $items[36];
-	my $position = $items[37];
-	my $park  = $items[38];
-	my $climb = $items[39];
-	my $level = $items[42];
+	my $amiss  = $items[10];
+	my $tmiss  = $items[11];
+	my $rotate = $items[37];
+	my $position = $items[38];
+	my $park  = $items[39];
+	my $climb = $items[40];
+	my $level = $items[43];
 	
 	# missing initiation line and end game scoring
 	$teamScore{$team}  = 0 unless (defined $teamScore{$team});
@@ -114,7 +116,8 @@ if ( open(my $fh, "<", $file) ) {
 	$teamTBPort{$team} = 0 unless (defined $teamTBPort{$team});
 	$teamTOPort{$team} = 0 unless (defined $teamTOPort{$team});
 	$teamTIPort{$team} = 0 unless (defined $teamTIPort{$team});
-	$teamMissed{$team} = 0 unless (defined $teamMissed{$team});
+	$teamAMissd{$team} = 0 unless (defined $teamAMissd{$team});
+	$teamTMissd{$team} = 0 unless (defined $teamTMissd{$team});
 	$teamRotate{$team} = 0 unless (defined $teamRotate{$team});
 	$teamPosition{$team} = 0 unless (defined $teamPosition{$team});
 	$teamPark{$team}   = 0 unless (defined $teamPark{$team});
@@ -127,7 +130,8 @@ if ( open(my $fh, "<", $file) ) {
 	$teamTBPort{$team} += $TBot;
 	$teamTOPort{$team} += $TOut;
 	$teamTIPort{$team} += $TInn;
-	$teamMissed{$team} += $miss;
+	$teamAMissd{$team} += $amiss;
+	$teamTMissd{$team} += $tmiss;
 	$teamRotate{$team} += $rotate;
 	$teamPosition{$team} += $position;
 	$teamPark{$team}   += $park;
@@ -179,7 +183,8 @@ my %avgAIPort;
 my %avgTBPort;
 my %avgTOPort;
 my %avgTIPort;
-my %avgMissed;
+my %avgAMissd;
+my %avgTMissd;
 my %avgRotate;
 my %avgPosition;
 my %avgPark;
@@ -194,7 +199,8 @@ my $highAinn = 0;
 my $highTbot = 0;
 my $highTout = 0;
 my $highTinn = 0;
-my $highMiss = 0;
+my $highAMis = 0;
+my $highTMis = 0;
 my $highRota = 0;
 my $highPosi = 0;
 my $highPark = 0;
@@ -212,7 +218,8 @@ foreach my $k (keys %teamScore) {
     $avgTBPort{$k} = $teamTBPort{$k} / $teamCount{$k};
     $avgTOPort{$k} = $teamTOPort{$k} / $teamCount{$k};
     $avgTIPort{$k} = $teamTIPort{$k} / $teamCount{$k};
-    $avgMissed{$k} = $teamMissed{$k} / $teamCount{$k};
+    $avgAMissd{$k} = $teamAMissd{$k} / $teamCount{$k};
+    $avgTMissd{$k} = $teamTMissd{$k} / $teamCount{$k};
     $avgRotate{$k} = $teamRotate{$k} / $teamCount{$k};
     $avgPosition{$k} = $teamPosition{$k} / $teamCount{$k};
     $avgPark{$k}   = $teamPark{$k} / $teamCount{$k};
@@ -227,7 +234,8 @@ foreach my $k (keys %teamScore) {
     $highTbot = $avgTBPort{$k} if ($avgTBPort{$k} > $highTbot);
     $highTout = $avgTOPort{$k} if ($avgTOPort{$k} > $highTout);
     $highTinn = $avgTIPort{$k} if ($avgTIPort{$k} > $highTinn);
-    $highMiss = $avgMissed{$k} if ($avgMissed{$k} > $highMiss);
+    $highAMis = $avgAMissd{$k} if ($avgAMissd{$k} > $highAMis);
+    $highTMis = $avgTMissd{$k} if ($avgTMissd{$k} > $highTMis);
     $highRota = $avgRotate{$k} if ($avgRotate{$k} > $highRota);
     $highPosi = $avgPosition{$k} if ($avgPosition{$k} > $highPosi);
     $highPark = $avgPark{$k}  if ($avgPark{$k} > $highPark);
@@ -243,7 +251,8 @@ foreach my $k (keys %teamScore) {
     $score = $avgTBPort{$k} if ("$order" eq "telebot");
     $score = $avgTOPort{$k} if ("$order" eq "teleout");
     $score = $avgTIPort{$k} if ("$order" eq "telein");
-    $score = $avgMissed{$k} if ("$order" eq "missed");
+    $score = $avgAMissd{$k} if ("$order" eq "amissed");
+    $score = $avgTMissd{$k} if ("$order" eq "tmissed");
     $score = $avgRotate{$k} if ("$order" eq "rotate");
     $score = $avgPosition{$k} if ("$order" eq "position");
     $score = $avgPark{$k}   if ("$order" eq "park");
@@ -329,13 +338,21 @@ if ($order eq "telein") {
     print "&picked=$pstr" if ($pstr ne "");
     print "&order=telein\">Avg. #<br>TeleOp<br>Inner</a></TH>\n";
 }
-# Missed
-if ($order eq "missed") {
-    print "<TH>Avg. #<br>Missed<br>Shots</TH>\n";
+# AMissed
+if ($order eq "amissed") {
+    print "<TH>Avg. #<br>Auto<br>Missed</TH>\n";
 } else {
     print "<TH><a href=\"${me}?event=$event";
     print "&picked=$pstr" if ($pstr ne "");
-    print "&order=missed\">Avg. #<br>Missed<br>Shots</a></TH>\n";
+    print "&order=amissed\">Avg. #<br>Auto<br>Missed</a></TH>\n";
+}
+# TMissed
+if ($order eq "tmissed") {
+    print "<TH>Avg. #<br>TeleOp<br>Missed</TH>\n";
+} else {
+    print "<TH><a href=\"${me}?event=$event";
+    print "&picked=$pstr" if ($pstr ne "");
+    print "&order=tmissed\">Avg. #<br>TeleOp<br>Missed</a></TH>\n";
 }
 # Rotation Control
 if ($order eq "rotate") {
@@ -410,7 +427,8 @@ foreach my $t (@plist) {
     my $tbstr = sprintf "%.3f", $avgTBPort{$items[1]};
     my $tostr = sprintf "%.3f", $avgTOPort{$items[1]};
     my $tistr = sprintf "%.3f", $avgTIPort{$items[1]};
-    my $mistr = sprintf "%.3f", $avgMissed{$items[1]};
+    my $mastr = sprintf "%.3f", $avgAMissd{$items[1]};
+    my $mtstr = sprintf "%.3f", $avgTMissd{$items[1]};
     my $rotstr = sprintf "%.3f", $avgRotate{$items[1]};
     my $posstr = sprintf "%.3f", $avgPosition{$items[1]};
     my $pkstr = sprintf "%.3f", $avgPark{$items[1]};
@@ -445,8 +463,10 @@ foreach my $t (@plist) {
     $bgc = "bgcolor=\"$green\"" if ($avgTIPort{$items[1]} == $highTinn && ! exists $pickhash{$items[1]});
     print "<td $bgc><h3>$tistr</h3></td>";
     $bgc = $bgcolor;
-    $bgc = "bgcolor=\"$green\"" if ($avgMissed{$items[1]} == $highMiss && ! exists $pickhash{$items[1]});
-    print "<td $bgc><h3>$mistr</h3></td>";
+    $bgc = "bgcolor=\"$green\"" if ($avgAMissd{$items[1]} == $highAMis && ! exists $pickhash{$items[1]});
+    print "<td $bgc><h3>$mastr</h3></td>";
+    $bgc = $bgcolor;                                                                                                       $bgc = "bgcolor=\"$green\"" if ($avgTMissd{$items[1]} == $highTMis && ! exists $pickhash{$items[1]});
+    print "<td $bgc><h3>$mtstr</h3></td>";
     $bgc = $bgcolor;
     $bgc = "bgcolor=\"$green\"" if ($avgRotate{$items[1]} == $highRota && ! exists $pickhash{$items[1]});
     print "<td $bgc><h3>$rotstr</h3></td>";

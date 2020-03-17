@@ -127,6 +127,7 @@ if ("$event" eq "") {
 		my $data = `cat matchdata/${file}`;
 		my @lines = split /\n/, $data;
 		my %mhash;
+		my $count = 0;
 		foreach my $line (@lines) {
 			my @items = split /=/, $line;
 			next unless (@items > 1);
@@ -135,8 +136,10 @@ if ("$event" eq "") {
 			$k =~ s/^\s+|\s+$//g;
 			$v =~ s/^\s+|\s+$//g;
 			$mhash{$k} = $v;
+			my @bits = split '_', $k;
+			next unless (@bits > 1);
+			$count = substr $bits[1], 2;
 		}
-		my $count = keys %mhash;
 
 		print "<p style=\"font-size:25px; font-weight:bold;\"><a href=\"index.cgi\">Home</a></p>\n";
 
@@ -145,7 +148,7 @@ if ("$event" eq "") {
 		$num += 3 if ($bits[0] eq "B");
 		print "<table border=1 cellspacing=5 cellpadding=5>\n";
 		print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">$event $pos</p></th></tr>\n";
-		for (my $m = 1; $m < $count; $m++) {
+		for (my $m = 1; $m <= $count; $m++) {
 			print "<tr><td><p style=\"font-size:20px; font-weight:bold;\">Qual $m</p></td>\n";
 			my $key = $event . "_qm" . $m . "_" . $num;
 			if (defined $mhash{$key}) {

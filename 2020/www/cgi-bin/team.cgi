@@ -110,92 +110,94 @@ while (my $line = <$fh>) {
     $teleop{$m} .= "<td align=center><h2>$items[8]</h2></td>";
     # teleop inner
     $teleop{$m} .= "<td align=center><h2>$items[9]</h2></td>";
-    # missed
+    # auto missed
     $teleop{$m} .= "<td align=center><h2>$items[10]</h2></td>";
+    # teleop missed
+    $teleop{$m} .= "<td align=center><h2>$items[11]</h2></td>";
     
     # shotlocs
     for (my $i = 0; $i < 25; $i++) {
-		$shotlocs[$i]++ if ("$items[$i+11]" eq "1");
+		$shotlocs[$i]++ if ("$items[$i+12]" eq "1");
     }
 
     # Control Panel
     # rotation
     my $answer = "No";
-    $answer = "Yes" if ("$items[36]" eq "1");
+    $answer = "Yes" if ("$items[37]" eq "1");
     $ctrl{$m}  = "<td align=center><h2>$answer</h2></td>";
     # position
     $answer = "No";
-    $answer = "Yes" if ("$items[37]" eq "1");
+    $answer = "Yes" if ("$items[38]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>"; 
 
     # park
     $answer = "No";
-    $answer = "Yes" if ("$items[38]" eq "1");
+    $answer = "Yes" if ("$items[39]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
 
     # climb
     $answer = "No";
-    $answer = "Yes" if ("$items[39]" eq "1");
+    $answer = "Yes" if ("$items[40]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
     # bar
     $answer = "N/A";
-    $answer = "Low" if ("$items[40]" eq "1");
-    $answer = "Level" if ("$items[40]" eq "2");
-    $answer = "High" if ("$items[40]" eq "3");
+    $answer = "Low" if ("$items[41]" eq "1");
+    $answer = "Level" if ("$items[41]" eq "2");
+    $answer = "High" if ("$items[41]" eq "3");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
     # buddy
     $answer = "No";
-    $answer = "Yes" if ("$items[41]" eq "1");
+    $answer = "Yes" if ("$items[42]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
     # level
     $answer = "No";
-    $answer = "Yes" if ("$items[42]" eq "1");
+    $answer = "Yes" if ("$items[43]" eq "1");
     $ctrl{$m} .= "<td align=center><h2>$answer</h2></td>";
     
     # DEFENSE & FOULS
     # defense
     $answer = "None";
-    $answer = "Poor" if ("$items[43]" eq "1");
-    $answer = "Average" if ("$items[43]" eq "2");
-    $answer = "Good" if ("$items[43]" eq "3");
-    $defoul{$m}  = "<td align=center><h2>$answer</h2></td>";
-    # defended
-    $answer = "None";
     $answer = "Poor" if ("$items[44]" eq "1");
     $answer = "Average" if ("$items[44]" eq "2");
     $answer = "Good" if ("$items[44]" eq "3");
+    $defoul{$m}  = "<td align=center><h2>$answer</h2></td>";
+    # defended
+    $answer = "None";
+    $answer = "Poor" if ("$items[45]" eq "1");
+    $answer = "Average" if ("$items[45]" eq "2");
+    $answer = "Good" if ("$items[45]" eq "3");
     $defoul{$m} .= "<td align=center><h2>$answer</h2></td>";
     # fouls
-    $answer = "None";
-    $answer = "One" if ("$items[45]" eq "1");
-    $answer = "A Few" if ("$items[45]" eq "2");
-    $answer = "Many" if ("$items[45]" eq "3");
-    $defoul{$m} .= "<td align=center><h2>$answer</h2></td>";
-    # tech fouls
     $answer = "None";
     $answer = "One" if ("$items[46]" eq "1");
     $answer = "A Few" if ("$items[46]" eq "2");
     $answer = "Many" if ("$items[46]" eq "3");
     $defoul{$m} .= "<td align=center><h2>$answer</h2></td>";
+    # tech fouls
+    $answer = "None";
+    $answer = "One" if ("$items[47]" eq "1");
+    $answer = "A Few" if ("$items[47]" eq "2");
+    $answer = "Many" if ("$items[47]" eq "3");
+    $defoul{$m} .= "<td align=center><h2>$answer</h2></td>";
     
     # SCOUT INPUT
     # rank
     $answer = "unknown";
-    $answer = "struggled" if ("$items[47]" eq "1");
-    $answer = "decent" if ("$items[47]" eq "2");
-    $answer = "very good" if ("$items[47]" eq "3");
+    $answer = "struggled" if ("$items[48]" eq "1");
+    $answer = "decent" if ("$items[48]" eq "2");
+    $answer = "very good" if ("$items[48]" eq "3");
     $scout{$m} .= "<td align=center><h2>$answer</h2></td>";
     # name
-    if (@items > 47) {
-        my $str = $items[48];
+    if (@items > 48) {
+        my $str = $items[49];
 	$str =~ tr/+/ /;
         $scout{$m} .= "<td align=center><h2>$str</h2></td>";
     } else {
         $scout{$m} .= "<td>&nbsp;</td>";
     }
     # comments
-    if (@items > 48) {
-        my $str = $items[49];
+    if (@items > 49) {
+        my $str = $items[50];
 	$str =~ tr/+/ /;
 	$str =~ s/%2C/,/g;
 	$str =~ s/%27/'/g;
@@ -213,7 +215,7 @@ print "<H1>$team</H1>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
 print "<tr><td colspan=9 align=center><H2>Initiation Line and Power Cell Counts</h2></td></tr>\n";
 print "<tr><th>Match</th><th>Auto<br>Line</th><th>Auto<BR>Bottom</th><th>Auto<br>Outer</th><th>Auto<br>Inner</th>";
-print "<th>TeleOp<br>Bottom</th><th>TeleOp<br>Outer</th><th>TeleOp<br>Inner</th><th>Missed</th></tr>";
+print "<th>TeleOp<br>Bottom</th><th>TeleOp<br>Outer</th><th>TeleOp<br>Inner</th><th>Auto<br>Missed</th><th>TeleOp<br>Missed</th></tr>";
 foreach my $m (@match) {
     print "<tr><td><h2>$m</h2></td>$auto{$m}$teleop{$m}</tr>\n";
 }

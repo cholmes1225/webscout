@@ -9,7 +9,7 @@ my $game = '2019UNH_qm1_1';
 my $team = "1234";
 my $auto = "0-0-0";
 my $teleop = "0-0-0";
-my $missed = "0";
+my $missed = "0-0";
 my $shotloc = "0000000000000000000000000";
 my $ctrl = "00";
 
@@ -62,6 +62,7 @@ my @gdata  = split '_', $game;
 my $event  = $gdata[0];
 my $match  = $gdata[1];
 my $robot  = $gdata[2];
+my @marray = split "-", $missed;
 my @aarray = split "-", $auto;
 my @tarray = split "-", $teleop;
 my @sarray = split "", $shotloc;
@@ -72,7 +73,7 @@ my $file   = "/var/www/html/csv/" . $event . ".txt";
 sub getheader {
     my $header0 = "event,match,team";
     my $header1 = "auto_line,auto_bottom,auto_outer,auto_inner";
-    my $header2 = "teleop_bottom,teleop_outer,teleop_inner,missed_shots";
+    my $header2 = "teleop_bottom,teleop_outer,teleop_inner,auto_missed,teleop_missed";
     my $header3 = "shotlocA1,shotlocA2,shotlocA3,shotlocA4,shotlocA5";
     my $header4 = "shotlocB1,shotlocB2,shotlocB3,shotlocB4,shotlocB5";
     my $header5 = "shotlocC1,shotlocC2,shotlocC3,shotlocC4,shotlocC5";
@@ -90,7 +91,7 @@ sub dumpdata {
     my $str = "$event,$match,$team,";
     # power cell counters
     $str .= "$aarray[3],$aarray[2],$aarray[1],$aarray[0],";
-    $str .= "$tarray[2],$tarray[1],$tarray[0],$missed,";
+    $str .= "$tarray[2],$tarray[1],$tarray[0],$marray[0],$marray[1],";
     # shot location
     $str .= "$sarray[0],$sarray[1],$sarray[2],$sarray[3],$sarray[4],";
     $str .= "$sarray[5],$sarray[6],$sarray[7],$sarray[8],$sarray[9],";

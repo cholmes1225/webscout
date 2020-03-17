@@ -10,7 +10,7 @@ my $game = '2019UNH_qm1_1';
 my $team = '1234';
 my $auto = "0-0-0-0";
 my $teleop = "0-0-0";
-my $missed = "0";
+my $missed = "0-0";
 my $shotloc = "000000000000000000000000000000";
 my $ctrl = "00";
 
@@ -18,26 +18,27 @@ my $ctrl = "00";
 # read in previous game state
 #
 if ($ENV{QUERY_STRING}) {
-	my @args = split /\&/, $ENV{QUERY_STRING};
-	my %params;
-	foreach my $arg (@args) {
-		my @bits = split /=/, $arg;
-		next unless (@bits == 2);
-		$params{$bits[0]} = $bits[1];
-	}
-	$game     = $params{'game'}    if (defined $params{'game'});
-	$team     = $params{'team'}    if (defined $params{'team'});
-	$auto     = $params{'auto'}    if (defined $params{'auto'});
-	$teleop   = $params{'teleop'}  if (defined $params{'teleop'});
-	$missed   = $params{'missed'}  if (defined $params{'missed'});
-	$shotloc  = $params{'shotloc'} if (defined $params{'shotloc'});
-	$ctrl     = $params{'ctrl'}    if (defined $params{'ctrl'});
+    my @args = split /\&/, $ENV{QUERY_STRING};
+    my %params;
+    foreach my $arg (@args) {
+	my @bits = split /=/, $arg;
+	next unless (@bits == 2);
+	$params{$bits[0]} = $bits[1];
+    }
+    $game     = $params{'game'}    if (defined $params{'game'});
+    $team     = $params{'team'}    if (defined $params{'team'});
+    $auto     = $params{'auto'}    if (defined $params{'auto'});
+    $teleop   = $params{'teleop'}  if (defined $params{'teleop'});
+    $missed   = $params{'missed'}  if (defined $params{'missed'});
+    $shotloc  = $params{'shotloc'} if (defined $params{'shotloc'});
+    $ctrl     = $params{'ctrl'}    if (defined $params{'ctrl'});
 }
 
 my @gdata  = split '_', $game;
 my $event  = $gdata[0];
 my $match  = $gdata[1];
 my $robot  = $gdata[2];
+my @marray = split "-", $missed;
 my @sarray = split "", $shotloc;
 my @carray = split "", $ctrl;
 my @aarray = split "-", $auto;
@@ -88,7 +89,7 @@ sub printCounter {
     my ($num) = (@_);
 
     print "<table cellpadding=5 cellspacing=0 border=0><tr>\n";
-    print "<th colspan=2><p style=\"font-size:32px;\">";
+    print "<th colspan=2><p style=\"font-size:25px;\">";
     print "Inner Port" if ($num == 1 || $num == 2);
     print "Outer Port" if ($num == 3 || $num == 4);
     print "Bottom Port" if ($num == 5 || $num == 6);
@@ -129,7 +130,7 @@ print "Content-type: text/html\n\n";
 print "<html>\n";
 print "<head>\n";
 print "<title>FRC 1073 Scouting App</title>\n";
-print "</head><body bgcolor=\"#dddddd\">\n";
+print "</head><body bgcolor=\"#dddddd\"><center>\n";
 
 # counter table
 print "<table border=0 cellpadding=0 cellspacing=0><tr>\n";
@@ -163,30 +164,53 @@ print "</td></tr></table>\n";
 print "</td><td>\n";
 
 print "<table border=1 cellspacing=0 cellpadding=0><tr>\n";
-print "<th><img src=$picdir/blue_power_port.jpg></th>\n";
-print "</tr><tr><td>\n";
+print "<td>\n";
 
-# missed counter
+# missed auto counter
 print "  <table cellpadding=5 cellspacing=0 border=0><tr>\n";
-print "    <th colspan=2 align=center><p style=\"font-size:30px;\">Missed Shots</p></th>";
-print "   </tr><tr>\n";
-my $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&missed=${missed}&shotloc=${shotloc}&ctrl=${ctrl}";
-my $miss = $missed + 1;
-print "    <td align=center><a href=\"${me}?${prefix}&missed=${miss}\"><img height=\"75\" width=\"131\" src=$picdir/count_up2.png><a></td>\n";
-print "    <td rowspan=2><table cellpadding=5 border=3><tr>\n";
-print "      <th bgcolor=white><p style=\"font-size:50px;\">$missed</p></th>\n";
+print "    <th align=center><p style=\"font-size:25px;\">Auto<br>Missed<br>Shots</p></th>";
+print "    <td><table cellpadding=5 border=3><tr>\n";
+print "      <th bgcolor=white><p style=\"font-size:50px;\">$marray[0]</p></th>\n";
 print "     </tr></table></td>\n";
 print "   </tr><tr>\n";
-$miss = $missed - 1;
+my $prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
+my $miss = $marray[0] + 1;
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"75\" width=\"131\" src=$picdir/count_up2.png><a></td>\n";
+print "   </tr><tr>\n";
+$miss = $marray[0] - 1;
 $miss = 0 if ($miss < 0);
-print "    <td align=center><a href=\"${me}?${prefix}&missed=${miss}\"><img height=\"63\" width=\"121\" src=$picdir/count_down2.png></a></td>\n";
-print "   </tr></table>\n";
-print "</td></tr></table>\n";
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=${miss}-$marray[1]\"><img height=\"63\" width=\"121\" src=$picdir/count_down2.png></a></td>\n";
+print "   </tr>\n";
+print "  </table>\n";
+
+print "</td><td>\n";
+
+# missed teleop counter
+print "  <table cellpadding=5 cellspacing=0 border=0><tr>\n";
+print "    <th align=center><p style=\"font-size:25px;\">TeleOp<br>Missed<br>Shots</p></th>";
+print "    <td><table cellpadding=5 border=3><tr>\n";
+print "      <th bgcolor=white><p style=\"font-size:50px;\">$marray[1]</p></th>\n";
+print "     </tr></table></td>\n";
+print "   </tr><tr>\n";
+$prefix = "game=${game}&team=${team}&auto=${auto}&teleop=${teleop}&shotloc=${shotloc}&ctrl=${ctrl}";
+$miss = $marray[1] + 1;
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"75\" width=\"131\" src=$picdir/count_up2.png><a></td>\n";
+print "   </tr><tr>\n";
+$miss = $marray[1] - 1;
+$miss = 0 if ($miss < 0);
+print "    <td colspan=2 align=center><a href=\"${me}?${prefix}&missed=$marray[0]-${miss}\"><img height=\"63\" width=\"121\" src=$picdir/count_down2.png></a></td>\n";
+print "   </tr>\n";
+print "  </table>\n";
+
+print "</td></tr><tr>\n";
+print "<th colspan=2><img src=$picdir/blue_power_port.jpg></th>\n";
+
+print "</tr></table>\n";
 
 print "</td><td>\n";
 
 print "<table border=1 cellpadding=0 cellspacing=0><tr>\n";
-print "<th><p style=\"font-size:40px;\">Teleop</p></th>\n";
+print "<th><p style=\"font-size:60px;\">TeleOp</p></th>\n";
 print "</tr><tr><td>\n";
 printCounter(2);
 print "</td></tr><tr><td>\n";
@@ -240,7 +264,8 @@ if ($carray[1] == 1) {
     $append = "ctrl=$carray[0]0";
 }
 print "<td><a href=\"${me}?${params}&${append}\"><img src=$picdir/box${mark}.png></a></td></tr></table></td>\n";
-print "<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\n";
+print "<td><p style=\"font-size:20px\"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+print "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p></td>\n";
 $append = "ctrl=$ctrl";
 print "<th><a href=\"wrapup.cgi?${params}&${append}\"><img height=\"75\" width=\"150\" src=$picdir/next_button.png></a></th>\n";
 print "</tr></table>\n";
