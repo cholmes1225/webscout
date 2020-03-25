@@ -388,8 +388,8 @@ print "<table cellpadding=3 border=0><tr><td>";
 print "<p style=\"font-size: 25px; font-weight:bold;\">Red Alliance Score: $rt</p>\n";
 print "</td><td>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </td><td>";
 print "<p style=\"font-size: 25px; font-weight:bold;\">Blue Alliance Score: $bt</p>\n";
-print "</td></tr></table>";
-
+print "</td></tr></table>\n";
+print "<br>\n";
 # print details
 print "<table cellpadding=3 border=1><tr>\n";
 print "<th colspan=17 align=center>Red Alliance Counters</th>\n";
@@ -448,7 +448,7 @@ for (my $i = 0; $i < 3; $i++) {
     $n = "&nbsp;" if ($teamClimb{$red[$i]} == 0);
     $o = "&nbsp;" if ($teamLevel{$red[$i]} == 0);
     
-    print "<tr><td>$red[$i]</td>";
+    print "<tr><th>$red[$i]</th>";
     print "<td>$a</td><td>$b</td><td>$c</td><td>$d</td><td>$e</td>";
     print "<td>&nbsp;</td><td>$f</td><td>$g</td><td>$h</td><td>$j</td><td>&nbsp;</td>";
     print "<td>$k</td><td>$l</td><td>$m</td><td>$n</td><td>$o</td></tr>";
@@ -512,7 +512,7 @@ for (my $i = 0; $i < 3; $i++) {
     $n = "&nbsp;" if ($teamClimb{$blue[$i]} == 0);
     $o = "&nbsp;" if ($teamLevel{$blue[$i]} == 0);
     
-    print "<tr><td>$blue[$i]</td>";
+    print "<tr><th>$blue[$i]</th>";
     print "<td>$a</td><td>$b</td><td>$c</td><td>$d</td><td>$e</td>";
     print "<td>&nbsp;</td><td>$f</td><td>$g</td><td>$h</td><td>$j</td><td>&nbsp;</td>";
     print "<td>$k</td><td>$l</td><td>$m</td><td>$n</td><td>$o</td></tr>";

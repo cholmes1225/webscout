@@ -213,7 +213,7 @@ while (my $line = <$fh>) {
 
 print "<H1>$team</H1>\n";
 print "<table cellpadding=5 cellspacing=5 border=1>\n";
-print "<tr><td colspan=9 align=center><H2>Initiation Line and Power Cell Counts</h2></td></tr>\n";
+print "<tr><td colspan=10 align=center><H2>Initiation Line and Power Cell Counts</h2></td></tr>\n";
 print "<tr><th>Match</th><th>Auto<br>Line</th><th>Auto<BR>Bottom</th><th>Auto<br>Outer</th><th>Auto<br>Inner</th>";
 print "<th>TeleOp<br>Bottom</th><th>TeleOp<br>Outer</th><th>TeleOp<br>Inner</th><th>Auto<br>Missed</th><th>TeleOp<br>Missed</th></tr>";
 foreach my $m (@match) {
