@@ -304,6 +304,73 @@ if ("$event" eq "") {
 		print "$pos : $a6[$num-4]</a></p></td>\n";
 	    }
 	    print "</table>\n";
+	    print "<BR><BR>\n";
+	    # are semifinals configured?
+	    my $semif = "/var/www/cgi-bin/matchdata/${event}.semis";
+	    if (-f "$semif" ) {
+		my @semit;
+		if (open my $fh, "<", $semif) {
+		    while (my $line = <$fh>) {
+			chomp $line;
+			push @semit, $line;
+		    }
+		    close $fh;
+		} else {
+		    print "<H2>Error opening $semif: $!</H2>\n";
+		    print "</td></tr></table>\n";
+		    print "</body></html>\n";
+		    exit 0;
+		}
+		print "<table cellpadding=5 cellspacing=5 border=1>\n";
+		print "<tr><th colspan=2><p style=\"font-size:25px; font-weight:bold;\">SF $pos</p></th></tr>\n";
+		# set text size for table
+		my $pstyle = "<p style=\"font-size:20px; font-weight:bold;\">";
+		# set defaults to red alliance
+		my $sfile = "red_${orient}.cgi";
+		my $index = $num - 1;
+		my @s1;
+		my @s2;
+		if ($num < 4) {
+		    # RED takes alliances 1(0),2(2)
+		    @s1 = split /-/, $semit[0];
+		    @s2 = split /-/, $semit[2];
+		} else {
+		    # BLUE takes alliances 3(1),4(3)
+		    $sfile = "blue_${orient}.cgi";
+		    @s1 = split /-/, $semit[1];
+		    @s2 = split /-/, $semit[3];
+		    $index = $num - 4;
+		}
+		print "<tr><th>${pstyle}SF 1</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf1_$num&team=$s1[$index]\">";
+		print "$pos : $s1[$index]</a></p></td>\n";
+
+		print "<tr><th>${pstyle}SF 2</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf2_$num&team=$s2[$index]\">";
+		print "$pos : $s2[$index]</a></p></td>\n";
+
+		print "<tr><td colspan=2>&nbsp;</td></tr>\n";
+
+		print "<tr><th>${pstyle}SF 3</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf3_$num&team=$s1[$index]\">";
+		print "$pos : $s1[$index]</a></p></td>\n";
+
+		print "<tr><th>${pstyle}SF 4</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf4_$num&team=$s2[$index]\">";
+		print "$pos : $s2[$index]</a></p></td>\n";
+
+		print "<tr><td colspan=2 align=center><p>(tiebreakers)</p></td></tr>\n";
+		
+		print "<tr><th>${pstyle}SF 5</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf5_$num&team=$s1[$index]\">";
+		print "$pos : $s1[$index]</a></p></td>\n";
+
+		print "<tr><th>${pstyle}SF 6</p></th>";
+		print "<td>${pstyle}<a href=\"${sfile}?game=${event}_sf6_$num&team=$s2[$index]\">";
+		print "$pos : $s2[$index]</a></p></td>\n";
+
+		print "</table>\n";
+	    }
 	    print "</td></tr></table>\n";
 	}
     }

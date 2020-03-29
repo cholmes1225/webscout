@@ -66,7 +66,7 @@ if (@quals < 1) {
 	print "<TH COLSPAN=3 ALIGN=\"right\"><P>Enter Year: <input type=\"text\"  name=\"event_year\" size=5></P></TD>\n";
 	print "<TD>&nbsp;</TD>\n";
 	print "<TH COLSPAN=3 ALIGN=\"left\"><P>Enter Venue: <input type=\"text\" name=\"event_venue\" size=10></P></TD>\n";
-	print "</TR><TR><TD COLSPAN=7><p>(to match a Blue Alliance event, make sure \"YearVenue\" matches the 'Blue Alliance keyword for this event)</p></TD>\n";
+	print "</TR><TR><TD COLSPAN=7><p>(to match a Blue Alliance event, make sure \"YearVenue\" matches the Blue Alliance 'keyword' for this event)</p></TD>\n";
 	print "</TR><TR><TD COLSPAN=7 align=\"center\"><input type=\"submit\" value=\"Save Event\"></TD>\n";
 	print "</TR><TR><TD COLSPAN=7>&nbsp;</TD>\n";
 	

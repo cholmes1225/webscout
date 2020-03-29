@@ -120,4 +120,43 @@ print "<tr><th>Alliance 8</th>";
 printAlliance @a8;
 print "\n</tr></table>\n";
 
+my $sfile = "/var/www/cgi-bin/matchdata/${event}.semis";
+if ( -f "$sfile" ) {
+
+    my @s1;
+    my @s2;
+    my @s3;
+    my @s4;
+    if ( open(my $fh, "<", $sfile) ) {
+	my $line = <$fh>;
+	@s1 = split /-/, $line;
+	$line = <$fh>;
+	@s2 = split /-/, $line;
+	$line = <$fh>;
+	@s3 = split /-/, $line;
+	$line = <$fh>;
+	@s4 = split /-/, $line;
+	close $fh;
+    } else {
+	print "<H2>Error, could not open $sfile: $!</H2>\n";
+	print "</body></html>\n";
+	exit 0;
+    }
+
+    print "<br><br><br><br>\n";
+    print "<table cellpadding=5 cellspacing=5 border=0>\n";
+    print "<tr><th>Semifinal Alliance 1</th>";
+    printAlliance @s1;
+    print "\n</tr><tr>\n";
+    print "<tr><th>Semifinal Alliance 4</th>";
+    printAlliance @s2;
+    print "\n</tr><tr>\n";
+    print "<tr><th>Semifinal Alliance 2</th>";
+    printAlliance @s3;
+    print "\n</tr><tr>\n";
+    print "<tr><th>Semifinal Alliance 3</th>";
+    printAlliance @s4;
+    print "\n</tr></table>\n";
+    
+}
 print "</body></html>\n";

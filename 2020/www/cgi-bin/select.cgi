@@ -13,7 +13,12 @@ my $a5 = "";
 my $a6 = "";
 my $a7 = "";
 my $a8 = "";
+my $s1 = "";
+my $s2 = "";
+my $s3 = "";
+my $s4 = "";
 my $save = "";
+my $reset = "";
 # start with 1st alliance captain
 my $pos = 1;
 
@@ -39,6 +44,11 @@ if ($ENV{QUERY_STRING}) {
     $a8 = $params{'a8'} if (defined $params{'a8'});
     $save = $params{'save'} if (defined $params{'save'});
     $pos = $params{'pos'} if (defined $params{'pos'});
+    $s1 = $params{'s1'} if (defined $params{'s1'});
+    $s2 = $params{'s2'} if (defined $params{'s2'});
+    $s3 = $params{'s3'} if (defined $params{'s3'});
+    $s4 = $params{'s4'} if (defined $params{'s4'});
+    $reset = $params{'reset'} if (defined $params{'reset'});
 }
 
 my @aa1 = split /-/, $a1;
@@ -83,6 +93,180 @@ if ($event eq "") {
 	print "<tr><th><h3><a href=\"${me}?event=$name[0]\">$name[0]</a></h3></td></tr>\n";
     }
     print "</table>\n";
+    print "</body></html>\n";
+    exit 0;
+}
+
+# we have an event: check if alliances already configured
+my $efile = "/var/www/cgi-bin/matchdata/${event}.elims";
+if (-f $efile) {
+    # has a reset been requested?
+    if ($reset ne "") {
+	my $output = `rm -f $efile 2>&1`;
+	if ($? != 0) {
+	    print "<h2>Error removing $efile: $output</h2>\n";
+	} else {
+	    print "<h2>Alliances for $event have been deleted</h2>\n";
+	}
+	print "<h2>Click <a href=\"${me}?event=$event\">here</a> to continue.</h2>\n";
+	print "</body></html>\n";
+	exit 0;
+    }
+
+    # load alliances
+    my @alliances;
+    if (open my $fh, "<", $efile) {
+	while (my $line = <$fh>) {
+	    chomp $line;
+	    push @alliances, $line;
+	}
+	close $fh;
+    } else {
+	print "<H2>Error opening $efile: $!</H2>\n";
+	print "</body></html>\n";
+	exit 0;
+    }
+    
+    # are we saving semifinals?
+    if ($save ne "") {
+	my $sfile = "/var/www/cgi-bin/matchdata/${event}.semis";
+	if (open my $fh, ">", $sfile) {
+	    print $fh "$alliances[${s1}-1]\n";
+	    print $fh "$alliances[${s2}-1]\n";
+	    print $fh "$alliances[${s3}-1]\n";
+	    print $fh "$alliances[${s4}-1]\n";
+	    close $fh;
+	} else {
+	    print "<p>Error, could not open $sfile for writing: $!.</p>";
+	    print "</body></html>\n";
+	    exit 0;
+	}
+
+	print "<h2>Semifinal teams saved</h2>\n";
+	print "<table cellpadding=5 cellspacing=5 border=0>\n";
+	print "<tr><th>$alliances[${s1}-1]</th><td align=left>\\</td></tr>\n";
+	print "<tr><td>&nbsp;</td><td>&nbsp;------------------</td></tr>\n";
+	print "<tr><th>$alliances[${s2}-1]</th><td align=left>/</td></tr>\n";
+	print "<tr><td colspan=2><hr></td></tr>\n";
+	print "<tr><th>$alliances[${s3}-1]</th><td align=left>\\</td></tr>\n";
+	print "<tr><td>&nbsp;</td><td>&nbsp;------------------</td></tr>\n";
+	print "<tr><th>$alliances[${s4}-1]</th><td align=left>/</td></tr>\n";
+	
+	print "</body></html>\n";
+	exit 0;
+    }
+    
+    # configure semifinals
+    print "<h2><a href=\"${me}?event=$event&reset=1\">Reset</A> Alliances or Select Quarterfinal Winners</h2>\n";
+    print "<table cellpadding=5 cellspacing=5 border=0>";
+    print "<tr><th>1</th><th>";
+    if ("$s1" eq "1") {
+	print "$alliances[0]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=1&s2=$s2&s3=$s3&s4=$s4\">$alliances[0]</a>";
+    }
+    print "</th><td align=left>\\</td></tr>";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td><th>";
+    if ($s1 ne "") {
+	if ("$s1" eq "1") {
+	    print "$alliances[0]";
+	} else {
+	    print "$alliances[7]";
+	}
+    } else {
+	print "&nbsp;------------------";
+    }
+    print "</th></tr>\n";
+    print "<tr><th>8</th><th>";
+    if ("$s1" eq "8") {
+	print "$alliances[7]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=8&s2=$s2&s3=$s3&s4=$s4\">$alliances[7]</a>";
+    }
+    print "</th><td align=left>/</td></tr>";
+    print "<tr><td colspan=3><hr></td></tr>\n";
+    print "<tr><th>4</th><th>";
+    if ("$s2" eq "4") {
+	print "$alliances[3]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=4&s3=$s3&s4=$s4\">$alliances[3]</a>";
+    }
+    print "</th><td align=left>\\</td></tr>";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td><th>";
+    if ($s2 ne "") {
+	if ("$s2" eq "4") {
+	    print "$alliances[3]";
+	} else {
+	    print "$alliances[4]";
+	}
+    } else {
+	print "&nbsp;------------------";
+    }
+    print "</th></tr>\n";
+    print "<tr><th>5</th><th>";
+    if ("$s2" eq "5") {
+	print "$alliances[4]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=5&s3=$s3&s4=$s4\">$alliances[4]</a>";
+    }
+    print "</th><td align=left>/</td></tr>";
+    print "<tr><td colspan=3><hr></td></tr>\n";
+    print "<tr><th>2</th><th>";
+    if ("$s3" eq "2") {
+	print "$alliances[1]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=$s2&s3=2&s4=$s4\">$alliances[1]</a>";
+    }
+    print "</th><td align=left>\\</td></tr>";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td><th>";
+    if ($s3 ne "") {
+	if ("$s3" eq "2") {
+	    print "$alliances[1]";
+	} else {
+	    print "$alliances[6]";
+	}
+    } else {
+	print "&nbsp;------------------";
+    }
+    print "</th></tr>\n";
+    print "<tr><th>7</th><th>";
+    if ("$s3" eq "7") {
+	print "$alliances[6]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=$s2&s3=7&s4=$s4\">$alliances[6]</a>";
+    }
+    print "</th><td align=left>/</td></tr>";
+    print "<tr><td colspan=3><hr></td></tr>\n";
+    print "<tr><th>3</th><th>";
+    if ("$s4" eq "3") {
+	print "$alliances[2]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=$s2&s3=$s3&s4=3\">$alliances[2]</a>";
+    }
+    print "</th><td align=left>\\</td></tr>";
+    print "<tr><td>&nbsp;</td><td>&nbsp;</td><th>";
+    if ($s4 ne "") {
+	if ("$s4" eq "3") {
+	    print "$alliances[2]";
+	} else {
+	    print "$alliances[5]";
+	}
+    } else {
+	print "&nbsp;------------------";
+    }
+    print "</th></tr>\n";
+    print "<tr><th>6</th><th>";
+    if ("$s4" eq "6") {
+	print "$alliances[5]";
+    } else {
+	print "<a href=\"${me}?event=$event&s1=$s1&s2=$s2&s3=$s3&s4=6\">$alliances[5]</a>";
+    }
+    print "</th><td align=left>/</td></tr>";
+    print "</table>\n";
+    # can we save yet?
+    if ("$s1" ne "" && "$s2" ne "" && "$s3" ne "" && "$s4" ne "") {
+	print "<br><H2><a href=\"${me}?event=${event}&s1=$s1&s2=$s2&s3=$s3&s4=$s4&save=yes\">Save</a> Semifinal Matches</H2>\n";
+    }
     print "</body></html>\n";
     exit 0;
 }
