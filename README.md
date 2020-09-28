@@ -16,7 +16,7 @@ The scouting hardware layout consists of:
 
 The scouting tablets are connected to the ethernet adapters, which allows them to be connected to the 8-port switch. The Raspberry Pi is also connected to the switch. The Raspberry Pi is powered on, and then the tablets are powered up.
 
-This software is installed on the Raspberry Pi running Ubuntu 18.04 with apache2. Apache2 is configured with CGI support, and the default DocumentRoot of /var/www/html is used. The source tree for each scouting system starts at 'www', which matches /var/www. Thus, you can tar up a copy of the 'www' directory and unpack it in /var/ on the Pi (and vice versa when developing on the Pi). 
+This software is installed on the Raspberry Pi running Ubuntu with apache2. Apache2 is configured with CGI support, and the default DocumentRoot of /var/www/html is used. /var/www/cgi-bin is configured as the 'cgi-bin' directory in apache2. The source tree for each scouting system starts at 'www', which matches /var/www. Thus, you can tar up a copy of the 'www' directory and unpack it in /var/ on the Pi (and vice versa when developing on the Pi). 
 
 A DHCP server is also configured on the Raspberry Pi to serve IP addresses to the tablets on the private LAN. The Raspberry Pi is configured with its own static IP address (in our case, 10.73.10.73). A web browser is launched on each scouting tablet, and this IP address is entered as the URL.
 
